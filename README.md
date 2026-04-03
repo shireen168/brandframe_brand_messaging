@@ -153,4 +153,4 @@ Estimated cost: ~$0.04 to $0.05 per full generation, ~$0.005 per section regener
 | Phase 2: UX, loading states, rate limit feedback, copy, regenerate, voice examples | Complete |
 | Phase 3: Animation-heavy UI/UX overhaul | Pending |
 
-Project 3 of 10 in the [AI Marketing Portfolio](https://aiwithshireen.com)
+Built by a Marketing professional specialising in applied AI. View the full portfolio of production-grade AI marketing tools at [aiwithshireen.com](https://aiwithshireen.com) or browse more projects on [GitHub](https://github.com/shireen-mvps).
