@@ -10,7 +10,7 @@ import {
 } from '@/lib/brandPrompt';
 import { createClient } from '@/lib/supabase-server';
 
-const MAX_TOKENS = 2000;
+const MAX_TOKENS = 2500;
 
 function getClientIP(req: NextRequest): string {
   return (
@@ -36,10 +36,12 @@ export async function POST(req: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Apply rate limiting
+  let rlResult: { remaining: number; limit: number } | null = null;
   try {
     const identifier = user ? user.id : getClientIP(req);
     const type = user ? 'user' : 'guest';
     const rl = await checkRateLimit(identifier, type);
+    rlResult = { remaining: rl.remaining, limit: rl.limit };
 
     if (!rl.allowed) {
       return NextResponse.json(
@@ -89,7 +91,10 @@ export async function POST(req: NextRequest) {
 
     const outputs = parseBrandOutputs(rawText);
 
-    return NextResponse.json({ outputs, inputs }, { status: 200 });
+    return NextResponse.json(
+      { outputs, inputs, remaining: rlResult?.remaining ?? 0, limit: rlResult?.limit ?? 0 },
+      { status: 200 }
+    );
   } catch (err) {
     console.error('[generate] Claude API error:', err);
     return NextResponse.json(

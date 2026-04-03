@@ -10,9 +10,12 @@ export function Navbar() {
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-violet-500" />
-          <span className="text-sm font-semibold text-white">BrandFrame</span>
+        <Link href="/" className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-violet-500" />
+            <span className="text-sm font-semibold text-white">BrandFrame</span>
+          </div>
+          <span className="pl-4 text-[10px] text-white/20">Built by Shireen · Powered by Claude Code</span>
         </Link>
 
         <div className="flex items-center gap-4">

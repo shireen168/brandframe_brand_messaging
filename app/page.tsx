@@ -23,7 +23,7 @@ export default function Home() {
 
         <p className="mb-8 text-base text-white/50 sm:text-lg">
           BrandFrame turns your raw business inputs into a complete brand messaging
-          strategy — positioning, brand promise, pillars, voice profile, personas,
+          strategy: positioning, brand promise, pillars, voice profile, personas,
           taglines, and elevator pitches.
         </p>
 

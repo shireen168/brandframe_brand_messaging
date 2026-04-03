@@ -21,6 +21,12 @@ export type ElevatorPitches = {
   long: string;
 };
 
+export type VoiceExamples = {
+  linkedin: string;
+  instagram: string;
+  email_subject: string;
+};
+
 export type BrandOutputs = {
   positioning_statement: string;
   brand_promise: string;
@@ -29,6 +35,7 @@ export type BrandOutputs = {
   personas: Persona[];
   taglines: string[];
   elevator_pitches: ElevatorPitches;
+  voice_examples?: VoiceExamples;
 };
 
 // ── Prompt builders ───────────────────────────────────────────────────────────
@@ -37,6 +44,8 @@ export function buildSystemPrompt(): string {
   return (
     'You are an expert brand strategist and messaging consultant. ' +
     'You help businesses define their brand identity with clarity and precision. ' +
+    'When competitors are mentioned, explicitly position the brand as the superior alternative ' +
+    'by highlighting what the brand does differently or better. ' +
     'Your output must be valid JSON matching the specified schema exactly. ' +
     'Do not include markdown, code blocks, or any text outside the JSON object.'
   );
@@ -44,8 +53,12 @@ export function buildSystemPrompt(): string {
 
 export function buildUserPrompt(inputs: BrandFormInputs): string {
   const competitorLine = inputs.competitors
-    ? `Competitors: ${inputs.competitors}\n`
+    ? `Competitors to differentiate from: ${inputs.competitors}\n`
     : '';
+
+  const positioningInstruction = inputs.competitors
+    ? `"positioning_statement": "1-2 sentence statement that explicitly positions this brand as the better alternative to ${inputs.competitors}"`
+    : `"positioning_statement": "1-2 sentence market position statement"`;
 
   return `Create a complete brand messaging document for this company.
 
@@ -58,7 +71,7 @@ ${competitorLine}Tone preference: ${inputs.tone}
 
 Return ONLY a JSON object with this exact structure:
 {
-  "positioning_statement": "1-2 sentence market position statement",
+  ${positioningInstruction},
   "brand_promise": "Core commitment to customers in 1 sentence",
   "brand_pillars": ["pillar 1", "pillar 2", "pillar 3", "pillar 4"],
   "voice_tone_profile": {
@@ -85,6 +98,11 @@ Return ONLY a JSON object with this exact structure:
     "short": "1 sentence under 20 words",
     "medium": "2-3 sentences under 60 words",
     "long": "Full paragraph under 120 words"
+  },
+  "voice_examples": {
+    "linkedin": "A LinkedIn post in the brand voice (3-4 sentences, professional, insight-led, no hashtags)",
+    "instagram": "An Instagram caption in the brand voice (2-3 sentences, punchy, 3-5 relevant hashtags at the end)",
+    "email_subject": "An email subject line in the brand voice (under 60 characters, compelling, drives opens)"
   }
 }`;
 }

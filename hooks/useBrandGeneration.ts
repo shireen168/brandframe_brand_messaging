@@ -7,7 +7,7 @@ import { BrandOutputs } from '@/lib/brandPrompt';
 type GenerationState =
   | { status: 'idle' }
   | { status: 'loading' }
-  | { status: 'success'; data: BrandOutputs }
+  | { status: 'success'; data: BrandOutputs; remaining: number; limit: number }
   | { status: 'error'; message: string };
 
 type UseBrandGenerationReturn = {
@@ -36,7 +36,12 @@ export function useBrandGeneration(): UseBrandGenerationReturn {
         return;
       }
 
-      setState({ status: 'success', data: json.outputs as BrandOutputs });
+      setState({
+        status: 'success',
+        data: json.outputs as BrandOutputs,
+        remaining: json.remaining ?? 0,
+        limit: json.limit ?? 0,
+      });
     } catch {
       setState({
         status: 'error',

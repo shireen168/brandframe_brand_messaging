@@ -1,14 +1,52 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 
 type Props = {
   title: string;
   children: React.ReactNode;
   delay?: number;
+  copyText?: string;
+  onRegenerate?: () => Promise<void>;
+  isRegenerating?: boolean;
 };
 
-export function BrandCard({ title, children, delay = 0 }: Props) {
+function ClipboardIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="9" y="2" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
+function RefreshIcon({ spinning }: { spinning?: boolean }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      className={spinning ? 'animate-spin' : ''}>
+      <polyline points="23 4 23 10 17 10" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+    </svg>
+  );
+}
+
+export function BrandCard({ title, children, delay = 0, copyText, onRegenerate, isRegenerating }: Props) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy() {
+    if (!copyText) return;
+    navigator.clipboard.writeText(copyText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -16,10 +54,33 @@ export function BrandCard({ title, children, delay = 0 }: Props) {
       transition={{ duration: 0.4, delay }}
       className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm"
     >
-      <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-400">
-        {title}
-      </h3>
-      <div className="text-sm leading-relaxed text-white/80">{children}</div>
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-violet-300">
+          {title}
+        </h3>
+        <div className="flex items-center gap-1.5">
+          {onRegenerate && (
+            <button
+              onClick={onRegenerate}
+              disabled={isRegenerating}
+              title="Regenerate (uses 1 credit)"
+              className="rounded-md p-1.5 text-white/30 transition hover:text-violet-400 disabled:opacity-40"
+            >
+              <RefreshIcon spinning={isRegenerating} />
+            </button>
+          )}
+          {copyText && (
+            <button
+              onClick={handleCopy}
+              aria-label={copied ? 'Copied' : 'Copy to clipboard'}
+              className="rounded-md p-1.5 text-white/30 transition hover:text-violet-400"
+            >
+              {copied ? <CheckIcon /> : <ClipboardIcon />}
+            </button>
+          )}
+        </div>
+      </div>
+      <div className="text-base leading-relaxed text-white/90">{children}</div>
     </motion.div>
   );
 }
@@ -28,10 +89,7 @@ export function BrandPillList({ items }: { items: string[] }) {
   return (
     <ul className="flex flex-wrap gap-2">
       {items.map((item, i) => (
-        <li
-          key={i}
-          className="rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1 text-xs text-violet-300"
-        >
+        <li key={i} className="rounded-full border border-violet-500/40 bg-violet-500/10 px-3 py-1 text-sm font-medium text-violet-200">
           {item}
         </li>
       ))}
@@ -41,13 +99,13 @@ export function BrandPillList({ items }: { items: string[] }) {
 
 export function BrandTaglineList({ taglines }: { taglines: string[] }) {
   return (
-    <ol className="space-y-2">
+    <ol className="space-y-3">
       {taglines.map((t, i) => (
         <li key={i} className="flex gap-3">
-          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-violet-600/30 text-xs font-bold text-violet-300">
+          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-600/30 text-xs font-bold text-violet-300">
             {i + 1}
           </span>
-          <span className="italic">&ldquo;{t}&rdquo;</span>
+          <span className="text-base italic text-white/90">&ldquo;{t}&rdquo;</span>
         </li>
       ))}
     </ol>
@@ -55,8 +113,7 @@ export function BrandTaglineList({ taglines }: { taglines: string[] }) {
 }
 
 export function PersonaCard({
-  persona,
-  delay,
+  persona, delay,
 }: {
   persona: { name: string; role: string; pain_points: string[]; what_they_need: string };
   delay?: number;
@@ -69,19 +126,18 @@ export function PersonaCard({
       className="rounded-xl border border-white/10 bg-white/5 p-4"
     >
       <div className="mb-2">
-        <span className="font-semibold text-white">{persona.name}</span>
-        <span className="ml-2 text-xs text-white/40">{persona.role}</span>
+        <span className="text-base font-semibold text-white">{persona.name}</span>
+        <span className="ml-2 text-sm text-white/50">{persona.role}</span>
       </div>
       <ul className="mb-2 space-y-1">
         {persona.pain_points.map((p, i) => (
-          <li key={i} className="flex gap-2 text-xs text-white/60">
+          <li key={i} className="flex gap-2 text-sm text-white/70">
             <span className="text-red-400">•</span> {p}
           </li>
         ))}
       </ul>
-      <p className="text-xs text-emerald-400/80">
-        <span className="font-medium">Needs: </span>
-        {persona.what_they_need}
+      <p className="text-sm text-emerald-300">
+        <span className="font-semibold">Needs: </span>{persona.what_they_need}
       </p>
     </motion.div>
   );
