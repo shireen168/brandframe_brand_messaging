@@ -34,7 +34,8 @@ yarn-error.log*
 .env.local
 .env.local.*
 .env*.local
-# .env.local.example IS committed (safe — no real values)
+# Always commit the example file — safe, no real values
+!.env.local.example
 
 # vercel
 .vercel
