@@ -2,7 +2,7 @@
 
 > Fill in your brand details. Get a complete brand messaging strategy in seconds.
 
-**Live demo:** _add after deploy_
+**Live demo:** [brandframe-brand-messaging.vercel.app](https://brandframe-brand-messaging.vercel.app)
 **Built by** [Shireen](https://github.com/shireen-mvps) · Powered by Claude Code
 
 ---
@@ -52,6 +52,7 @@ Guests get 2 free generations per day. Sign in with Google for 10 per day, plus 
 | `/api/generate` | POST | Full brand messaging generation |
 | `/api/regenerate` | POST | Regenerate a single section (rate-limited) |
 | `/api/save` | POST | Save brand doc to Supabase (auth required) |
+| `/api/delete` | DELETE | Delete a saved brand doc (auth required, ownership verified) |
 | `/auth/callback` | GET | Supabase OAuth callback handler |
 
 ---
