@@ -102,4 +102,8 @@ export default function GeneratePage() {
             isSaved={isSaved}
             onReset={reset}
           />
-        
+        )}
+      </div>
+    </main>
+  );
+}
