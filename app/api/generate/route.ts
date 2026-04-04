@@ -96,6 +96,12 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (err) {
+    if (err instanceof Error && err.message === 'PARSE_FAILURE') {
+      return NextResponse.json(
+        { error: 'Generation produced an unexpected format. Please try again.' },
+        { status: 422 }
+      );
+    }
     console.error('[generate] Claude API error:', err);
     return NextResponse.json(
       { error: 'Generation failed. Please try again.' },

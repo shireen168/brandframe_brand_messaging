@@ -107,11 +107,37 @@ Return ONLY a JSON object with this exact structure:
 }`;
 }
 
+const REQUIRED_FIELDS: (keyof BrandOutputs)[] = [
+  'positioning_statement',
+  'brand_promise',
+  'brand_pillars',
+  'voice_tone_profile',
+  'personas',
+  'taglines',
+  'elevator_pitches',
+];
+
 export function parseBrandOutputs(raw: string): BrandOutputs {
   const cleaned = raw
     .replace(/^```json\s*/i, '')
     .replace(/^```\s*/i, '')
     .replace(/```\s*$/i, '')
     .trim();
-  return JSON.parse(cleaned) as BrandOutputs;
+
+  let parsed: BrandOutputs;
+  try {
+    parsed = JSON.parse(cleaned) as BrandOutputs;
+  } catch {
+    console.error('[parseBrandOutputs] JSON parse failed. Raw text:', raw);
+    throw new Error('PARSE_FAILURE');
+  }
+
+  for (const field of REQUIRED_FIELDS) {
+    if (parsed[field] === undefined || parsed[field] === null) {
+      console.error('[parseBrandOutputs] Missing required field:', field);
+      throw new Error('PARSE_FAILURE');
+    }
+  }
+
+  return parsed;
 }

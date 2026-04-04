@@ -13,7 +13,7 @@ import { BrandFormInputs } from '@/lib/sanitize';
 import { BrandOutputs } from '@/lib/brandPrompt';
 
 export default function GeneratePage() {
-  const { state, generate } = useBrandGeneration();
+  const { state, generate, reset } = useBrandGeneration();
   const { user } = useUser();
   const [lastInputs, setLastInputs] = useState<BrandFormInputs | null>(null);
   const [isSaved, setIsSaved] = useState(false);
@@ -120,6 +120,7 @@ export default function GeneratePage() {
             inputs={lastInputs ?? undefined}
             onSave={user ? handleSave : undefined}
             isSaved={isSaved}
+            onReset={reset}
           />
         )}
       </div>

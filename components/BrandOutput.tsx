@@ -12,16 +12,18 @@ type Props = {
   inputs?: BrandFormInputs;
   onSave?: () => void;
   isSaved?: boolean;
+  onReset?: () => void;
 };
 
 const TABS = ['Positioning', 'Voice & Tone', 'Personas', 'Taglines', 'Elevator Pitches', 'Voice in Action'] as const;
 type Tab = (typeof TABS)[number];
 
-export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved }: Props) {
+export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved, onReset }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('Positioning');
   const [localOutputs, setLocalOutputs] = useState<BrandOutputs>(outputs);
   const [regenerating, setRegenerating] = useState<string | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   async function handleRegenerate(section: string) {
     if (!inputs) return;
@@ -69,8 +71,18 @@ export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved }: P
     setTimeout(() => setCopiedAll(false), 2000);
   }
 
+  function handleReset() {
+    setIsExiting(true);
+  }
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }} className="space-y-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: isExiting ? 0 : 1 }}
+      transition={{ duration: isExiting ? 0.3 : 0.5 }}
+      onAnimationComplete={() => { if (isExiting && onReset) onReset(); }}
+      className="space-y-6"
+    >
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -78,20 +90,34 @@ export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved }: P
           <h2 className="text-2xl font-bold text-white">{companyName}</h2>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button
-            onClick={handleCopyAll}
-            className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70 transition hover:border-white/30 hover:text-white"
-          >
+          <button onClick={handleCopyAll}
+            className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70 transition hover:border-white/30 hover:text-white">
             {copiedAll ? '✓ Copied!' : 'Copy All'}
           </button>
           {onSave && (
-            <button
-              onClick={onSave}
-              disabled={isSaved}
-              className="rounded-full border border-violet-500/50 bg-violet-500/10 px-4 py-2 text-sm font-medium text-violet-200 transition hover:bg-violet-500/20 disabled:opacity-40"
-            >
-              {isSaved ? 'Saved' : 'Save to Dashboard'}
-            </button>
+            <AnimatePresence mode="wait">
+              {isSaved ? (
+                <motion.button key="saved" disabled
+                  initial={{ borderColor: 'rgba(16,185,129,0.8)', color: 'rgb(110,231,183)' }}
+                  animate={{ borderColor: 'rgba(139,92,246,0.5)', color: 'rgb(221,214,254)' }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium opacity-60">
+                  <motion.svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <motion.path d="M2 7l3.5 3.5L12 3"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.4, ease: 'easeOut' }}
+                    />
+                  </motion.svg>
+                  Saved
+                </motion.button>
+              ) : (
+                <motion.button key="save" onClick={onSave}
+                  className="rounded-full border border-violet-500/50 bg-violet-500/10 px-4 py-2 text-sm font-medium text-violet-200 transition hover:bg-violet-500/20">
+                  Save to Dashboard
+                </motion.button>
+              )}
+            </AnimatePresence>
           )}
         </div>
       </div>
@@ -101,9 +127,7 @@ export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved }: P
         {TABS.map((tab) => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-              activeTab === tab
-                ? 'bg-violet-600 text-white'
-                : 'border border-white/15 text-white/50 hover:border-white/30 hover:text-white/80'
+              activeTab === tab ? 'bg-violet-600 text-white' : 'border border-white/15 text-white/50 hover:border-white/30 hover:text-white/80'
             }`}>
             {tab}
           </button>
@@ -114,15 +138,18 @@ export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved }: P
       <AnimatePresence mode="wait">
         <motion.div key={activeTab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
-          <BrandTabContent
-            activeTab={activeTab}
-            outputs={localOutputs}
-            inputs={inputs}
-            regenerating={regenerating}
-            onRegenerate={handleRegenerate}
-          />
+          <BrandTabContent activeTab={activeTab} outputs={localOutputs} inputs={inputs}
+            regenerating={regenerating} onRegenerate={handleRegenerate} />
         </motion.div>
       </AnimatePresence>
+
+      {/* Generate another */}
+      {onReset && (
+        <button onClick={handleReset}
+          className="mt-2 w-full rounded-2xl border border-white/15 py-3 text-sm font-medium text-white/40 transition hover:border-white/30 hover:text-white/70">
+          Generate another
+        </button>
+      )}
     </motion.div>
   );
 }
