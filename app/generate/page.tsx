@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
 import { BrandForm } from '@/components/BrandForm';
 import { BrandOutput } from '@/components/BrandOutput';
 import { RateLimitBadge } from '@/components/RateLimitBadge';
 import { GenerationProgress } from '@/components/GenerationProgress';
 import { GuestLimitPrompt } from '@/components/GuestLimitPrompt';
+import { AuthErrorBanner } from '@/components/AuthErrorBanner';
 import { useBrandGeneration } from '@/hooks/useBrandGeneration';
 import { useUser } from '@/hooks/useUser';
 import { BrandFormInputs } from '@/lib/sanitize';
@@ -17,16 +17,6 @@ export default function GeneratePage() {
   const { user } = useUser();
   const [lastInputs, setLastInputs] = useState<BrandFormInputs | null>(null);
   const [isSaved, setIsSaved] = useState(false);
-  const searchParams = useSearchParams();
-  const [authError, setAuthError] = useState(
-    searchParams.get('error') === 'auth_failed'
-  );
-
-  useEffect(() => {
-    if (!authError) return;
-    const t = setTimeout(() => setAuthError(false), 5000);
-    return () => clearTimeout(t);
-  }, [authError]);
 
   const isRateLimitError =
     state.status === 'error' && state.message.includes('Daily limit');
@@ -49,19 +39,9 @@ export default function GeneratePage() {
 
   return (
     <main className="min-h-screen bg-[#0a0a0f] px-4 pb-12 pt-28">
-      {authError && (
-        <div className="mx-auto mb-6 max-w-2xl flex items-center justify-between rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3">
-          <span className="text-sm text-amber-300">
-            Sign-in failed. Please try again.
-          </span>
-          <button
-            onClick={() => setAuthError(false)}
-            className="ml-4 text-lg leading-none text-amber-400 hover:text-amber-200"
-          >
-            ×
-          </button>
-        </div>
-      )}
+      <Suspense fallback={null}>
+        <AuthErrorBanner />
+      </Suspense>
 
       <div className="mx-auto max-w-2xl">
         <div className="mb-8 text-center">
@@ -122,8 +102,4 @@ export default function GeneratePage() {
             isSaved={isSaved}
             onReset={reset}
           />
-        )}
-      </div>
-    </main>
-  );
-}
+        
