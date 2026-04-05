@@ -32,7 +32,7 @@ export function BrandForm({ onSubmit, loading }: Props) {
   }
 
   const inputClass =
-    'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition focus:border-violet-500/60 focus:ring-1 focus:ring-violet-500/30';
+    'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-white/30 outline-none transition focus:border-violet-500/80 focus:ring-2 focus:ring-violet-500/20 focus:[box-shadow:0_0_0_3px_rgba(139,92,246,0.15)]';
   const labelClass = 'block text-xs font-medium uppercase tracking-wider text-white/40 mb-1.5';
   const charHint = (val: string, max: number) => (
     <span className={`text-xs ${val.length > max * 0.9 ? 'text-amber-400' : 'text-white/20'}`}>
@@ -120,8 +120,8 @@ export function BrandForm({ onSubmit, loading }: Props) {
                 onClick={() => set('tone', t)}
                 className={`rounded-xl border px-3 py-2 text-sm transition ${
                   form.tone === t
-                    ? 'border-violet-500 bg-violet-500/20 text-violet-300'
-                    : 'border-white/10 bg-white/5 text-white/50 hover:border-white/20 hover:text-white/70'
+                    ? 'border-violet-500 bg-violet-500/20 text-violet-300 shadow-[0_0_12px_rgba(139,92,246,0.25)]'
+                    : 'border-white/10 bg-white/5 text-white/50 hover:scale-[1.02] hover:border-white/20 hover:text-white/70'
                 }`}>
                 {t}
               </button>
@@ -134,10 +134,11 @@ export function BrandForm({ onSubmit, loading }: Props) {
         type="submit"
         disabled={loading}
         whileHover={{ scale: loading ? 1 : 1.02 }}
-        whileTap={{ scale: loading ? 1 : 0.98 }}
-        className="w-full rounded-xl bg-violet-600 py-3.5 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
+        whileTap={{ scale: loading ? 1 : 0.97 }}
+        className="group relative w-full overflow-hidden rounded-xl bg-violet-600 py-3.5 text-sm font-semibold text-white transition hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? 'Generating your brand...' : 'Generate Brand Messaging'}
+        <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-500 ease-in-out group-hover:translate-x-full" />
+        <span className="relative">{loading ? 'Generating your brand...' : 'Generate Brand Messaging'}</span>
       </motion.button>
     </motion.form>
   );

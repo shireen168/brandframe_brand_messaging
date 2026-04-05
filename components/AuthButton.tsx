@@ -46,8 +46,9 @@ export function AuthButton() {
   return (
     <button
       onClick={handleSignIn}
-      className="rounded-full bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-violet-500"
+      className="group relative overflow-hidden rounded-full bg-violet-600 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-violet-500"
     >
+      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-500 ease-in-out group-hover:translate-x-full" />
       Sign in with Google
     </button>
   );

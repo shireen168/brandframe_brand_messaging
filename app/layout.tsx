@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
 import { Navbar } from '@/components/Navbar';
+import { AnimatedBackground } from '@/components/AnimatedBackground';
 import './globals.css';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
@@ -19,6 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable} antialiased`}>
       <body className="min-h-screen bg-[#0a0a0f]">
+        <AnimatedBackground />
+        <div className="relative z-10">
         <Navbar />
         {children}
         <footer className="border-t border-white/5 py-5 text-center text-xs text-white/20">
@@ -33,6 +36,7 @@ export default function RootLayout({
           </a>
           {' · '}Powered by Claude Code
         </footer>
+        </div>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 
 > Fill in your brand details. Get a complete brand messaging strategy in seconds.
 
-**Live demo:** [brandframe-brand-messaging.vercel.app](https://brandframe-brand-messaging.vercel.app)
+**Live demo:** [BrandFrame at Vercel](https://brandframe-brand-messaging.vercel.app)
 **Built by** [Shireen](https://github.com/shireen-mvps) · Powered by Claude Code
 
 ---

@@ -91,8 +91,9 @@ export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved, onR
         </div>
         <div className="flex flex-wrap gap-2">
           <button onClick={handleCopyAll}
-            className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70 transition hover:border-white/30 hover:text-white">
-            {copiedAll ? '✓ Copied!' : 'Copy All'}
+            className="group relative overflow-hidden rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/70 transition hover:border-white/30 hover:text-white">
+            <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-500 ease-in-out group-hover:translate-x-full" />
+            <span className="relative">{copiedAll ? '✓ Copied!' : 'Copy All'}</span>
           </button>
           {onSave && (
             <AnimatePresence mode="wait">
@@ -123,13 +124,19 @@ export function BrandOutput({ outputs, companyName, inputs, onSave, isSaved, onR
       </div>
 
       {/* Tab nav */}
-      <div className="flex flex-wrap gap-2">
+      <div className="scrollbar-hide flex gap-1 overflow-x-auto pb-1">
         {TABS.map((tab) => (
           <button key={tab} onClick={() => setActiveTab(tab)}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-              activeTab === tab ? 'bg-violet-600 text-white' : 'border border-white/15 text-white/50 hover:border-white/30 hover:text-white/80'
+            className={`relative whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition ${
+              activeTab === tab ? 'text-white' : 'text-white/40 hover:text-white/70'
             }`}>
             {tab}
+            {activeTab === tab && (
+              <motion.div
+                layoutId="tab-indicator"
+                className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full bg-violet-500"
+              />
+            )}
           </button>
         ))}
       </div>

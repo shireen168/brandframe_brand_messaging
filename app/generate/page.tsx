@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
+import { motion } from 'framer-motion';
 import { BrandForm } from '@/components/BrandForm';
 import { BrandOutput } from '@/components/BrandOutput';
 import { RateLimitBadge } from '@/components/RateLimitBadge';
@@ -70,7 +71,12 @@ export default function GeneratePage() {
         </div>
 
         {state.status !== 'success' && (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm"
+          >
             <BrandForm
               onSubmit={handleSubmit}
               loading={state.status === 'loading'}
@@ -90,7 +96,7 @@ export default function GeneratePage() {
                   {state.message}
                 </p>
               ))}
-          </div>
+          </motion.div>
         )}
 
         {state.status === 'success' && (
