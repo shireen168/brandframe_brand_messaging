@@ -3,7 +3,7 @@
 > Fill in your brand details. Get a complete brand messaging strategy in seconds.
 
 **Live demo:** [BrandFrame at Vercel](https://brandframe-brand-messaging.vercel.app)
-**Built by** [Shireen](https://github.com/shireen-mvps) · Powered by Claude Code
+**Built by** [Shireen](https://github.com/shireen168) · Powered by Claude Code
 
 ---
 
@@ -62,7 +62,7 @@ Guests get 2 free generations per day. Sign in with Google for 10 per day, plus 
 ### 1. Clone and install
 
 ```powershell
-git clone https://github.com/shireen-mvps/brandframe_brand_messaging
+git clone https://github.com/shireen168/brandframe_brand_messaging
 cd brandframe_brand_messaging
 npm install
 ```
@@ -154,4 +154,4 @@ Estimated cost: ~$0.04 to $0.05 per full generation, ~$0.005 per section regener
 | Phase 2: UX, loading states, rate limit feedback, copy, regenerate, voice examples | Complete |
 | Phase 3: Animation-heavy UI/UX overhaul | Pending |
 
-Built by a Marketing professional specialising in applied AI. View the full portfolio of production-grade AI marketing tools at [aiwithshireen.com](https://aiwithshireen.com) or browse more projects on [GitHub](https://github.com/shireen-mvps).
+Built by a Marketing professional specialising in applied AI. View the full portfolio of production-grade AI marketing tools at [aiwithshireen.com](https://aiwithshireen.com) or browse more projects on [GitHub](https://github.com/shireen168).
